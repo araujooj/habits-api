@@ -25,12 +25,12 @@ class Group {
   @Column()
   category: string;
 
-  @OneToMany(() => UserGroup, (userGroup) => userGroup.group, { cascade: true })
-  user_groups: UserGroup[];
-
-  @ManyToOne(() => User, (user) => user.created_groups)
+  @ManyToOne(() => User, (user) => user.created_groups, { eager: true })
   @JoinColumn({ name: 'creator_id' })
   creator: User;
+
+  @OneToMany(() => UserGroup, (userGroup) => userGroup.group, { cascade: true, eager: true })
+  users_on_group: UserGroup[];
 
   @CreateDateColumn()
   created_at: Date;
