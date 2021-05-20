@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export default class CreatePerceptionTable1616151720965 implements MigrationInterface {
+export default class CreateGroupTable1621465888377 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'perceptions',
+        name: 'groups',
         columns: [
           {
             name: 'id',
@@ -14,16 +14,16 @@ export default class CreatePerceptionTable1616151720965 implements MigrationInte
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'type',
+            name: 'name',
             type: 'varchar',
           },
           {
-            name: 'comment',
+            name: 'description',
             type: 'varchar',
           },
           {
-            name: 'daily_perception',
-            type: 'boolean',
+            name: 'category',
+            type: 'varchar',
           },
           {
             name: 'created_at',
@@ -41,6 +41,6 @@ export default class CreatePerceptionTable1616151720965 implements MigrationInte
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('perceptions');
+    await queryRunner.dropTable('groups');
   }
 }

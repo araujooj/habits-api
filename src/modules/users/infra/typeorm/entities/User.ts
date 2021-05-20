@@ -1,35 +1,40 @@
 import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    CreateDateColumn,
+    UpdateDateColumn,
+    OneToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import Group from '@modules/groups/infra/typeorm/entities/Group';
+import UserGroup from './UserGroup';
 
 @Entity('users')
 class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
-  @Column()
-  name: string;
+    @Column()
+    name: string;
 
-  @Column()
-  email: string;
+    @Column()
+    email: string;
 
-  @Column()
-  @Exclude()
-  password: string;
+    @Column()
+    @Exclude()
+    password: string;
 
-  @Column({ default: false })
-  is_staff: boolean;
+    @OneToMany(() => UserGroup, (userGroup) => userGroup.group, { cascade: true })
+    user_groups: UserGroup[];
 
-  @CreateDateColumn()
-  created_at: Date;
+    @OneToMany(() => Group, (group) => group.creator)
+    created_groups: Group[];
 
-  @UpdateDateColumn()
-  updated_at: Date;
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 }
-export default User
+export default User;

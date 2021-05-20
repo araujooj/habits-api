@@ -27,11 +27,6 @@ export default class CreateUsersTable1605554421774 implements MigrationInterface
             isUnique: true,
           },
           {
-            name: 'is_staff',
-            type: 'boolean',
-            default: false,
-          },
-          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',

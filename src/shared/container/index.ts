@@ -1,19 +1,13 @@
-import { container } from 'tsyringe'
+import { container } from 'tsyringe';
 
-import '@modules/users/providers/index'
-import './providers'
+import '@modules/users/providers/index';
+import './providers';
 
-import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository'
-import IUsersRepository from '@modules/users/repositories/IUsersRepository'
+import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
+import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import IGroupsRepository from '@modules/groups/repositories/IGroupsRepository';
+import GroupsRepository from '@modules/groups/infra/typeorm/repositories/GroupsRepository';
 
-import StudentsRepository from '@modules/students/infra/typeorm/repositories/StudentsRepository'
-import IStudentsRepository from '@modules/students/repositories/IStudentRepository'
+container.registerSingleton<IUsersRepository>('UsersRepository', UsersRepository);
 
-import PerceptionsRepository from '@modules/perceptions/infra/typeorm/repositories/PerceptionsRepository'
-import IPerceptionsRepository from '@modules/perceptions/repositories/IPerceptionRepository'
-
-container.registerSingleton<IUsersRepository>('UsersRepository', UsersRepository)
-
-container.registerSingleton<IStudentsRepository>('StudentsRepository', StudentsRepository)
-
-container.registerSingleton<IPerceptionsRepository>('PerceptionsRepository', PerceptionsRepository)
+container.registerSingleton<IGroupsRepository>('GroupsRepository', GroupsRepository);

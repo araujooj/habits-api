@@ -17,9 +17,6 @@ implements IUsersRepository {
 
   public async findAll({ skip, take }: IPagination): Promise<User[]> {
     const users = await this.ormRepository.find({
-      where: {
-        disabled: false,
-      },
       skip,
       take,
     });
@@ -32,7 +29,6 @@ implements IUsersRepository {
       const findUser = await this.ormRepository.findOne({
         where: {
           id,
-          disabled: false,
         },
       });
 
@@ -46,7 +42,6 @@ implements IUsersRepository {
     const findUser = await this.ormRepository.findOne({
       where: {
         email,
-        disabled: false,
       },
     });
 
@@ -59,10 +54,10 @@ implements IUsersRepository {
   }
 
   public async create({
-    name, email, password, is_staff,
+    name, email, password,
   }: ICreateUserDTO): Promise<User> {
     const user = this.ormRepository.create({
-      name, email, password, is_staff,
+      name, email, password,
     })
 
     await this.ormRepository.save(user);

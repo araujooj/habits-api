@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
-import cors from 'cors'
+import cors from 'cors';
 
 import '@shared/infra/typeorm';
 
@@ -17,20 +17,20 @@ app.use('/files', express.static(uploadConfig.uploadsFolder));
 app.use(routes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof AppError) {
-    return res.status(err.statusCode).json({
-      status: 'error',
-      message: err.message,
-    });
-  }
+    if (err instanceof AppError) {
+        return res.status(err.statusCode).json({
+            status: 'error',
+            message: err.message,
+        });
+    }
 
-  console.error(err);
-  return res.status(500).json({
-    status: 'error',
-    message: 'Internal server error',
-  });
+    console.error(err);
+    return res.status(500).json({
+        status: 'error',
+        message: 'Internal server error',
+    });
 });
 
 app.listen(process.env.PORT || 3333, () => {
-  console.log('🚀 Server Started on port 3333');
+    console.log('🚀 Server Started on port 3333');
 });

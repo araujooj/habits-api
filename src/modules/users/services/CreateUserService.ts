@@ -15,7 +15,7 @@ export default class CreateUserService {
   ) {}
 
   public async execute({
-    name, email, password, is_staff,
+    name, email, password,
   }: IUser): Promise<User> {
     const checkUserExists = await this.userRepository.findByEmail(email);
 
@@ -29,7 +29,6 @@ export default class CreateUserService {
       name,
       email,
       password: hashedPassword,
-      is_staff,
     });
 
     return user;
