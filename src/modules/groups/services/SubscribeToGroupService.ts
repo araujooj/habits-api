@@ -16,7 +16,9 @@ export default class SubscribeToGroupService {
   ) {}
 
   public async execute({ group_id, user_id }: IRequest): Promise<Group> {
-    if (!group_id) {
+    const group = await this.groupsRepository.findById(group_id);
+
+    if (!group) {
       throw new AppError('Group not found', 404);
     }
 

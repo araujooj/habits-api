@@ -6,6 +6,8 @@ declare namespace Express {
     pagination: {
       realPage: number;
       realTake: number;
+      page: number;
+      nextUrl: string | null;
     };
   }
 }

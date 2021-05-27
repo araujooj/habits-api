@@ -7,7 +7,7 @@ import Group from '../infra/typeorm/entities/Group';
 
 export default interface IGroupsRepository {
   findById(id: string): Promise<Group | undefined>;
-  findAll(pagination: IPagination): Promise<Group[]>;
+  findAll(pagination: IPagination): Promise<[Group[], number]>;
   findInGroup(data: ISubscribeToGroupDTO): Promise<UserGroup | undefined>;
   create(group: ICreateGroupDTO): Promise<Group>;
   save(group: Group): Promise<Group>;

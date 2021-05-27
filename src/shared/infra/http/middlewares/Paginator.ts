@@ -1,6 +1,4 @@
-import {
-  Request, Response, NextFunction,
-} from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 export default function Paginator(req: Request, res: Response, next: NextFunction): void {
   let { perPage, page } = req.query;
@@ -18,17 +16,21 @@ export default function Paginator(req: Request, res: Response, next: NextFunctio
     page = '1';
   }
 
+  let intPage = Number(page);
+
+  const nextUrl = `${process.env.APP_API_URL}${
+    req.baseUrl
+  }?perPage=${perPage}&page=${(intPage += 1)}`;
+
+  res.header('Access-Control-Expose-Headers', '*');
+  res.header({ page, perPage });
+
   req.pagination = {
-    realPage,
+    page: Number(page),
+    nextUrl,
     realTake,
-  }
-
-  let intPage = Number(page)
-
-  const nextUrl = `${process.env.APP_API_URL}${req.baseUrl}?perPage=${perPage}&page=${intPage += 1}`
-
-  res.header('Access-Control-Expose-Headers', '*')
-  res.header({ page, perPage, nextUrl })
+    realPage,
+  };
 
   return next();
 }

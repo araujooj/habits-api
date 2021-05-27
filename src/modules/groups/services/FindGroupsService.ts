@@ -10,7 +10,7 @@ export default class FindGroupsService {
     private groupsRepository: IGroupsRepository,
   ) {}
 
-  public async execute({ skip, take }: IPagination): Promise<Group[]> {
+  public async execute({ skip, take }: IPagination): Promise<[Group[], number]> {
     const groups = await this.groupsRepository.findAll({ skip, take });
 
     return groups;

@@ -58,8 +58,8 @@ export default class GroupsRepository implements IGroupsRepository {
       .catch((_) => undefined);
   }
 
-  public async findAll({ skip, take }: IPagination): Promise<Group[]> {
-    const groups = await this.groupsRepository.find({ skip, take });
+  public async findAll({ skip, take }: IPagination): Promise<[Group[], number]> {
+    const groups = await this.groupsRepository.findAndCount({ skip, take });
 
     return groups;
   }

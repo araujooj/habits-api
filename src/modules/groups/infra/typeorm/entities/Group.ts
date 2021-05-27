@@ -1,5 +1,6 @@
 import User from '@modules/users/infra/typeorm/entities/User';
 import UserGroup from '@modules/users/infra/typeorm/entities/UserGroup';
+import { Exclude } from 'class-transformer';
 import {
   Entity,
   Column,
