@@ -12,5 +12,6 @@ routes.use('/users', UserRouter);
 routes.use('/profile', ProfileRouter);
 routes.use('/groups', GroupRouter);
 routes.use('/groups/subscribe', SubscriptionRouter);
+routes.use('/groups/:group_id/events', SubscriptionRouter);
 
 export default routes;

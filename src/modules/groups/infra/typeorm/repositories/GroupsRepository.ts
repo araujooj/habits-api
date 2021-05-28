@@ -1,8 +1,8 @@
 import { ICreateGroupDTO } from '@modules/groups/dtos/ICreateGroupDTO';
+import IFindGroupsDTO from '@modules/groups/dtos/IFindGroupsDTO';
 import { ISubscribeToGroupDTO } from '@modules/groups/dtos/ISubscribeToGroupDTO';
 import IGroupsRepository from '@modules/groups/repositories/IGroupsRepository';
 import UserGroup from '@modules/users/infra/typeorm/entities/UserGroup';
-import IPagination from '@shared/dtos/IPagination';
 import { DeleteResult, getRepository, Repository } from 'typeorm';
 import Group from '../entities/Group';
 
@@ -58,10 +58,29 @@ export default class GroupsRepository implements IGroupsRepository {
       .catch((_) => undefined);
   }
 
-  public async findAll({ skip, take }: IPagination): Promise<[Group[], number]> {
-    const groups = await this.groupsRepository.findAndCount({ skip, take });
+  public async findAll({ skip, take, category }: IFindGroupsDTO): Promise<[Group[], number]> {
+    if (!category) {
+      const groups = await this.groupsRepository.find({
+        skip,
+        take,
+      });
 
-    return groups;
+      const count = groups.length;
+
+      return [groups, count];
+    }
+
+    const groups = await this.groupsRepository.find({
+      skip,
+      take,
+      where: {
+        category,
+      },
+    });
+
+    const count = groups.length;
+
+    return [groups, count];
   }
 
   public async create({

@@ -1,38 +1,35 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import { classToClass } from 'class-transformer';
 import CreateGroupService from '@modules/groups/services/CreateGroupService';
 import FindGroupsService from '@modules/groups/services/FindGroupsService';
-import { classToClass } from 'class-transformer';
 import UpdateGroupService from '@modules/groups/services/UpdateGroupService';
 import DeleteGroupService from '@modules/groups/services/DeleteGroupService';
-import Group from '../../typeorm/entities/Group';
+
+interface IRequest {
+  category: string;
+}
 
 export default class GroupController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const { category } = request.query;
+    const { category } = request.query as unknown as IRequest;
 
-    const groups = container.resolve(FindGroupsService);
+    const findGroups = container.resolve(FindGroupsService);
 
-    const [findGroups, count] = await groups.execute({
+    const [groups, count] = await findGroups.execute({
       skip: request.pagination.realPage,
       take: request.pagination.realTake,
+      category,
     });
 
-    let groupsResponse = {
+    const groupsResponse = {
       page: request.pagination.page,
-      nextUrl: request.pagination.nextUrl,
+      perPage: request.pagination.realTake,
+      previousUrl: request.pagination.page === 1 ? null : request.pagination.previousUrl,
+      nextUrl: count < request.pagination.realTake ? null : request.pagination.nextUrl,
       count,
-      results: findGroups,
+      results: groups,
     };
-
-    if (count < 15) {
-      groupsResponse = {
-        page: request.pagination.page,
-        nextUrl: null,
-        count,
-        results: findGroups,
-      };
-    }
 
     return response.status(200).json(classToClass(groupsResponse));
   }

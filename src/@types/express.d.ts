@@ -7,7 +7,8 @@ declare namespace Express {
       realPage: number;
       realTake: number;
       page: number;
-      nextUrl: string | null;
+      nextUrl: unknown;
+      previousUrl: string | null;
     };
   }
 }

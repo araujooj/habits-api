@@ -1,6 +1,6 @@
 import User from '@modules/users/infra/typeorm/entities/User';
 import UserGroup from '@modules/users/infra/typeorm/entities/UserGroup';
-import { Exclude } from 'class-transformer';
+import Event from '@modules/events/infra/typeorm/entities/Event';
 import {
   Entity,
   Column,
@@ -32,6 +32,9 @@ class Group {
 
   @OneToMany(() => UserGroup, (userGroup) => userGroup.group, { cascade: true, eager: true })
   users_on_group: UserGroup[];
+
+  @OneToMany(() => Event, (event) => event.group, { cascade: true })
+  events: Event[];
 
   @CreateDateColumn()
   created_at: Date;
