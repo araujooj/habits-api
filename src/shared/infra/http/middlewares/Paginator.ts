@@ -22,15 +22,13 @@ export default function Paginator(req: Request, res: Response, next: NextFunctio
     throw new AppError('perPage value can be only until 500 units');
   }
 
-  let intPage = Number(page);
+  const intPage = Number(page);
 
-  const nextUrl = `${process.env.APP_API_URL}${
-    req.baseUrl
-  }?perPage=${perPage}&page=${(intPage += 1)}`;
+  const nextUrl = `${process.env.APP_API_URL}${req.baseUrl}?perPage=${perPage}&page=${intPage + 1}`;
 
-  const previousUrl = `${process.env.APP_API_URL}${
-    req.baseUrl
-  }?perPage=${perPage}&page=${(intPage -= 1)}`;
+  const previousUrl = `${process.env.APP_API_URL}${req.baseUrl}?perPage=${perPage}&page=${
+    intPage - 1
+  }`;
 
   res.header('Access-Control-Expose-Headers', '*');
   res.header({ page, perPage });

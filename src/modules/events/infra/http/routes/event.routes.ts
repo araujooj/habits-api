@@ -9,12 +9,12 @@ const eventController = new EventController();
 
 EventRouter.use(ensureAuth);
 
-EventRouter.post('/', eventController.store);
+EventRouter.post('/:group_id', eventController.store);
 
-EventRouter.get('/', Paginator, eventController.index);
+EventRouter.get('/:group_id', Paginator, eventController.index);
 
-EventRouter.put('/:id', eventController.update);
+EventRouter.put('/:group_id/:event_id', eventController.update);
 
-EventRouter.delete('/:id', eventController.destroy);
+EventRouter.delete('/:group_id/:event_id', eventController.destroy);
 
 export default EventRouter;

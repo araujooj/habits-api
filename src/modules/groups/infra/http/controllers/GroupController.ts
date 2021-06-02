@@ -5,6 +5,7 @@ import CreateGroupService from '@modules/groups/services/CreateGroupService';
 import FindGroupsService from '@modules/groups/services/FindGroupsService';
 import UpdateGroupService from '@modules/groups/services/UpdateGroupService';
 import DeleteGroupService from '@modules/groups/services/DeleteGroupService';
+import FindSpecificGroupService from '@modules/groups/services/FindSpecificGroupService';
 
 interface IRequest {
   category: string;
@@ -16,7 +17,7 @@ export default class GroupController {
 
     const findGroups = container.resolve(FindGroupsService);
 
-    const [groups, count] = await findGroups.execute({
+    const [groups, totalCount] = await findGroups.execute({
       skip: request.pagination.realPage,
       take: request.pagination.realTake,
       category,
@@ -26,8 +27,8 @@ export default class GroupController {
       page: request.pagination.page,
       perPage: request.pagination.realTake,
       previousUrl: request.pagination.page === 1 ? null : request.pagination.previousUrl,
-      nextUrl: count < request.pagination.realTake ? null : request.pagination.nextUrl,
-      count,
+      nextUrl: groups.length < request.pagination.realTake ? null : request.pagination.nextUrl,
+      count: totalCount,
       results: groups,
     };
 
@@ -77,5 +78,17 @@ export default class GroupController {
     });
 
     return response.status(204).json();
+  }
+
+  public async show(request: Request, response: Response): Promise<Response> {
+    const { id } = request.params;
+
+    const findGroup = container.resolve(FindSpecificGroupService);
+
+    const group = await findGroup.execute({
+      id,
+    });
+
+    return response.json(classToClass(group));
   }
 }

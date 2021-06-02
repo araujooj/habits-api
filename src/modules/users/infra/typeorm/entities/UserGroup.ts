@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  Column,
 } from 'typeorm';
 import User from './User';
 
@@ -16,7 +17,7 @@ class UserGroup {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Group)
+  @ManyToOne(() => Group, (group) => group.users_on_group)
   @JoinColumn({ name: 'group_id' })
   group: Group;
 
@@ -32,6 +33,10 @@ class UserGroup {
   @Exclude()
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Exclude()
+  @Column()
+  group_id: string;
 
   @Expose({ name: 'id' })
   getUserId() {

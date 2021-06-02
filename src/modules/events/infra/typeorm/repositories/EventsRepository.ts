@@ -1,18 +1,16 @@
 import IEventDTO from '@modules/events/dtos/IEventDTO';
 import IFindEventsDTO from '@modules/events/dtos/IFindEventsDTO';
-import IEventRepository from '@modules/events/repositories/IEventRepository';
+import IEventsRepository from '@modules/events/repositories/IEventsRepository';
 import UserGroup from '@modules/users/infra/typeorm/entities/UserGroup';
 import IPagination from '@shared/dtos/IPagination';
 import { DeleteResult, getRepository, Repository } from 'typeorm';
+import Event from '@modules/events/infra/typeorm/entities/Event';
 
-export default class EventsRepository implements IEventRepository {
+export default class EventsRepository implements IEventsRepository {
   private eventsRepository: Repository<Event>;
-
-  private userGroupsRepository: Repository<UserGroup>;
 
   constructor() {
     this.eventsRepository = getRepository(Event);
-    this.userGroupsRepository = getRepository(UserGroup);
   }
 
   public async findById(id: string): Promise<Event | undefined> {
@@ -38,15 +36,28 @@ export default class EventsRepository implements IEventRepository {
     return [events, count];
   }
 
-  public async create(group: IEventDTO): Promise<Event> {
-    throw new Error('Method not implemented.');
+  public async create({
+    date, group_id, location, title,
+  }: IEventDTO): Promise<Event> {
+    const event = this.eventsRepository.create({
+      date,
+      group: { id: group_id },
+      location,
+      title,
+    });
+
+    await this.eventsRepository.save(event);
+
+    return event;
   }
 
-  public async save(group: Event): Promise<Event> {
-    throw new Error('Method not implemented.');
+  public async save(event: Event): Promise<Event> {
+    const newEvent = await this.eventsRepository.save(event);
+
+    return newEvent;
   }
 
   public async delete(id: string): Promise<void | DeleteResult> {
-    throw new Error('Method not implemented.');
+    return this.eventsRepository.delete(id);
   }
 }

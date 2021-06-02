@@ -1,5 +1,6 @@
 import { ICreateGroupDTO } from '@modules/groups/dtos/ICreateGroupDTO';
 import IFindGroupsDTO from '@modules/groups/dtos/IFindGroupsDTO';
+import IFindUserGroupDTO from '@modules/groups/dtos/IFindUserGroupDTO';
 import { ISubscribeToGroupDTO } from '@modules/groups/dtos/ISubscribeToGroupDTO';
 import IGroupsRepository from '@modules/groups/repositories/IGroupsRepository';
 import UserGroup from '@modules/users/infra/typeorm/entities/UserGroup';
@@ -14,6 +15,28 @@ export default class GroupsRepository implements IGroupsRepository {
   constructor() {
     this.groupsRepository = getRepository(Group);
     this.userGroupsRepository = getRepository(UserGroup);
+  }
+
+  public async findGroupsByUser({
+    user_id,
+    skip,
+    take,
+  }: IFindUserGroupDTO): Promise<[Group[], number]> {
+    const [userGroups, count] = await this.userGroupsRepository.findAndCount({
+      skip,
+      take,
+      where: {
+        user: {
+          id: user_id,
+        },
+      },
+    });
+
+    const groupIds = userGroups.map((group) => group.group_id);
+
+    const groups = await this.groupsRepository.findByIds(groupIds);
+
+    return [groups, count];
   }
 
   public async findInGroup({
@@ -60,17 +83,15 @@ export default class GroupsRepository implements IGroupsRepository {
 
   public async findAll({ skip, take, category }: IFindGroupsDTO): Promise<[Group[], number]> {
     if (!category) {
-      const groups = await this.groupsRepository.find({
+      const groups = await this.groupsRepository.findAndCount({
         skip,
         take,
       });
 
-      const count = groups.length;
-
-      return [groups, count];
+      return groups;
     }
 
-    const groups = await this.groupsRepository.find({
+    const groups = await this.groupsRepository.findAndCount({
       skip,
       take,
       where: {
@@ -78,9 +99,7 @@ export default class GroupsRepository implements IGroupsRepository {
       },
     });
 
-    const count = groups.length;
-
-    return [groups, count];
+    return groups;
   }
 
   public async create({

@@ -1,4 +1,5 @@
 import Group from '@modules/groups/infra/typeorm/entities/Group';
+import { Exclude } from 'class-transformer';
 import {
   Entity,
   Column,
@@ -18,7 +19,7 @@ class Event {
   title: string;
 
   @Column()
-  date: string;
+  date: Date;
 
   @Column()
   location: string;
@@ -27,10 +28,15 @@ class Event {
   @JoinColumn({ name: 'group_id' })
   group: Group;
 
+  @Exclude()
+  @Column()
+  group_id: string;
+
   @CreateDateColumn()
   created_at: Date;
 
   @UpdateDateColumn()
   updated_at: Date;
 }
+
 export default Event;

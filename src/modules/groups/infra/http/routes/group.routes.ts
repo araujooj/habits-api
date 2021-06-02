@@ -13,6 +13,8 @@ GroupRouter.post('/', groupController.store);
 
 GroupRouter.get('/', Paginator, groupController.index);
 
+GroupRouter.get('/:id', groupController.show);
+
 GroupRouter.put('/:id', groupController.update);
 
 GroupRouter.delete('/:id', groupController.destroy);

@@ -33,7 +33,7 @@ class Group {
   @OneToMany(() => UserGroup, (userGroup) => userGroup.group, { cascade: true, eager: true })
   users_on_group: UserGroup[];
 
-  @OneToMany(() => Event, (event) => event.group, { cascade: true })
+  @OneToMany(() => Event, (event) => event.group, { cascade: true, eager: true })
   events: Event[];
 
   @CreateDateColumn()
