@@ -18,7 +18,7 @@ class Event {
   @Column()
   title: string;
 
-  @Column()
+  @Column('timestamp with time zone')
   date: Date;
 
   @Column()

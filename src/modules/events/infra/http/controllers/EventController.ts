@@ -2,9 +2,12 @@ import CreateEventService from '@modules/events/services/CreateEventService';
 import DeleteEventService from '@modules/events/services/DeleteEventService';
 import FindEventsService from '@modules/events/services/FindEventsService';
 import UpdateEventService from '@modules/events/services/UpdateEventService';
+import AppError from '@shared/errors/AppError';
 import { classToClass } from 'class-transformer';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import * as yup from 'yup';
+import { isBefore, parseISO } from 'date-fns';
 
 class EventController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -31,8 +34,25 @@ class EventController {
   }
 
   public async store(request: Request, response: Response): Promise<Response> {
+    const schema = yup.object().shape({
+      date: yup
+        .date()
+        .default(() => new Date().toISOString())
+        .required('date is required'),
+      location: yup.string().required('location is required'),
+      title: yup.string().required('title is required'),
+    });
+
+    await schema.validate(request.body, { abortEarly: false }).catch(({ errors }) => {
+      throw new AppError(errors);
+    });
+
     const { date, location, title } = request.body;
     const { group_id } = request.params;
+
+    if (isBefore(parseISO(date), Date.now())) {
+      throw new AppError('date cannot be in past days');
+    }
 
     const createEvent = container.resolve(CreateEventService);
 
@@ -50,6 +70,10 @@ class EventController {
   public async update(request: Request, response: Response): Promise<Response> {
     const { date, location, title } = request.body;
     const { group_id, event_id } = request.params;
+
+    if (isBefore(parseISO(date), Date.now())) {
+      throw new AppError('date cannot be in past days');
+    }
 
     const updateEvent = container.resolve(UpdateEventService);
 

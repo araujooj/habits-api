@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import Group from '@modules/groups/infra/typeorm/entities/Group';
+import NotificationUser from '@modules/notifications/infra/typeorm/entities/NotificationUser';
 import UserGroup from './UserGroup';
 
 @Entity('users')
@@ -30,6 +31,9 @@ class User {
 
   @OneToMany(() => Group, (group) => group.creator)
   created_groups: Group[];
+
+  @OneToMany(() => NotificationUser, (notificationUser) => notificationUser.user)
+  notifications: NotificationUser[];
 
   @CreateDateColumn()
   created_at: Date;

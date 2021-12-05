@@ -1,4 +1,3 @@
-import IPagination from '@shared/dtos/IPagination';
 import { DeleteResult } from 'typeorm';
 import Event from '@modules/events/infra/typeorm/entities/Event';
 import IEventDTO from '../dtos/IEventDTO';
